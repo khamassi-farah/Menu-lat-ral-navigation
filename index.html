@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu latéral REIS KYC</title>
+  <style>
+    :root {
+      --navy-900: #0c2238;
+      --navy-800: #14314d;
+      --navy-700: #1b4265;
+      --navy-600: #234f77;
+      --blue-500: #3b9cff;
+      --blue-400: #5cb0ff;
+      --blue-100: rgba(92, 176, 255, 0.12);
+      --white: #ffffff;
+      --text-soft: rgba(255, 255, 255, 0.76);
+      --text-muted: rgba(255, 255, 255, 0.55);
+      --border-soft: rgba(255, 255, 255, 0.08);
+      --hover: rgba(255, 255, 255, 0.08);
+      --active: linear-gradient(90deg, rgba(59, 156, 255, 0.22), rgba(59, 156, 255, 0.06));
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+      --radius: 16px;
+      --radius-sm: 12px;
+      --transition: 0.22s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #eef3f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .sidebar {
+      width: 320px;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 28%),
+        linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 100%);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -140px auto;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(59, 156, 255, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .sidebar-header {
+      padding: 26px 22px 20px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2bd4ff, #3b9cff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(59, 156, 255, 0.32);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      margin: 4px 0 0;
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .quick-access {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .quick-link {
+      min-height: 46px;
+      border-radius: 12px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-soft);
+      color: var(--white);
+      text-decoration: none;
+      transition: background var(--transition), transform var(--transition), border-color var(--transition);
+    }
+
+    .quick-link:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateX(2px);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .quick-link strong {
+      font-size: 14px;
+    }
+
+    .sidebar-body {
+      padding: 16px 14px 18px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .menu-section {
+      margin-bottom: 18px;
+    }
+
+    .menu-section-title {
+      padding: 0 10px;
+      margin: 0 0 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .menu-group {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .menu-item,
+    .submenu-item,
+    .group-toggle {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--white);
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .menu-item,
+    .group-toggle {
+      min-height: 48px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    .menu-item:hover,
+    .group-toggle:hover {
+      background: var(--hover);
+    }
+
+    .menu-item.active {
+      background: var(--active);
+      border-left: 3px solid var(--blue-400);
+      padding-left: 11px;
+    }
+
+    .menu-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .menu-label {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.94);
+    }
+
+    .menu-arrow {
+      font-size: 12px;
+      color: var(--text-soft);
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+
+    .group.open .menu-arrow {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      display: none;
+      padding: 4px 0 8px;
+      background: rgba(0,0,0,0.08);
+    }
+
+    .group.open .submenu {
+      display: block;
+    }
+
+    .submenu-item {
+      min-height: 42px;
+      padding: 0 14px 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-soft);
+      transition: background var(--transition), color var(--transition);
+      position: relative;
+    }
+
+    .submenu-item::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      position: absolute;
+      left: 28px;
+    }
+
+    .submenu-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+    }
+
+    .submenu-item.active {
+      color: #ffffff;
+      background: rgba(59, 156, 255, 0.12);
+    }
+
+    .submenu-item.active::before {
+      background: var(--blue-400);
+    }
+
+    .sidebar-footer {
+      padding: 16px 18px 20px;
+      border-top: 1px solid var(--border-soft);
+      background: rgba(0,0,0,0.08);
+    }
+
+    .status-card {
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .status-card h3 {
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .status-card p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--text-soft);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        max-width: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-logo">R</div>
+        <div class="brand-text">
+          <h1>Vneuron</h1>
+          <p>REIS KYC Platform</p>
+        </div>
+      </div>
+
+      <div class="quick-access">
+        <a href="#" class="quick-link">
+          <strong>🔎 Recherche KYC</strong>
+          <span>→</span>
+        </a>
+        <a href="#" class="quick-link">
+          <strong>📂 Cas & alertes</strong>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-body">
+      <div class="menu-section">
+        <p class="menu-section-title">Activité</p>
+        <div class="menu-group">
+          <a href="#" class="menu-item active">
+            <span class="menu-icon">🏠</span>
+            <span class="menu-label">Tableau de bord</span>
+          </a>
+          <a href="#" class="menu-item">
+            <span class="menu-icon">📌</span>
+            <span class="menu-label">Mes tâches</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <p class="menu-section-title">Analyse & traitement</p>
+        <div class="menu-group">
+          <div class="group open">
+            <button class="group-toggle" type="button" onclick="toggleGroup(this)">
+              <span class="menu-icon">🔎</span>
+              <span class="menu-label">Screening</span>
+              <span class="menu-arrow">▾</span>
+            </button>
+            <div class="submenu">
+              <button class="submenu-item active" type="button">Recherche simple</button>
+              <button class="submenu-item" type="button">Recherche avancée</button>
+              <button class="submenu-item" type="button">Historique des recherches</button>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-toggle" type="button" onclick="toggleGroup(this)">
+              <span class="menu-icon">📂</span>
+              <span class="menu-label">Cas & alertes</span>
+              <span class="menu-arrow">▾</span>
+            </button>
+            <div class="submenu">
+              <button class="submenu-item" type="button">Cas en attente</button>
+              <button class="submenu-item" type="button">Alertes critiques</button>
+              <button class="submenu-item" type="button">Décisions validées</button>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-toggle" type="button" onclick="toggleGroup(this)">
+              <span class="menu-icon">⚠️</span>
+              <span class="menu-label">Risques</span>
+              <span class="menu-arrow">▾</span>
+            </button>
+            <div class="submenu">
+              <button class="submenu-item" type="button">Règles de risque</button>
+              <button class="submenu-item" type="button">Seuils de criticité</button>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-toggle" type="button" onclick="toggleGroup(this)">
+              <span class="menu-icon">🔄</span>
+              <span class="menu-label">Workflow</span>
+              <span class="menu-arrow">▾</span>
+            </button>
+            <div class="submenu">
+              <button class="submenu-item" type="button">Étapes de validation</button>
+              <button class="submenu-item" type="button">Règles d’assignation</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <p class="menu-section-title">Configuration</p>
+        <div class="menu-group">
+          <div class="group">
+            <button class="group-toggle" type="button" onclick="toggleGroup(this)">
+              <span class="menu-icon">⚙️</span>
+              <span class="menu-label">Paramétrage</span>
+              <span class="menu-arrow">▾</span>
+            </button>
+            <div class="submenu">
+              <button class="submenu-item" type="button">Filtres de screening</button>
+              <button class="submenu-item" type="button">Gestion des files</button>
+              <button class="submenu-item" type="button">Rapports</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <p class="menu-section-title">Administration</p>
+        <div class="menu-group">
+          <div class="group">
+            <button class="group-toggle" type="button" onclick="toggleGroup(this)">
+              <span class="menu-icon">🛡️</span>
+              <span class="menu-label">Administration</span>
+              <span class="menu-arrow">▾</span>
+            </button>
+            <div class="submenu">
+              <button class="submenu-item" type="button">Technique</button>
+              <button class="submenu-item" type="button">Organisation</button>
+              <button class="submenu-item" type="button">Piste d’audit</button>
+              <button class="submenu-item" type="button">Statistiques</button>
+              <button class="submenu-item" type="button">Référentiel client</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="status-card">
+        <h3>État de la plateforme</h3>
+        <p>
+          Synchronisation des listes terminée aujourd’hui à 07:15.
+          Tous les services critiques sont opérationnels.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    function toggleGroup(button) {
+      const group = button.closest('.group');
+      group.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
